@@ -1,0 +1,14 @@
+{
+  "name": "git-history",
+  "main": "./lib/git-history",
+  "version": "0.0.0",
+  "description": "A short description of your package",
+  "activationEvents": ["git-history:toggle"],
+  "repository": "https://github.com/jakesankey/git-history",
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "dependencies": {
+  }
+}

@@ -6,7 +6,7 @@ class GitHistoryView extends View
             @div "The GitHistory package is Alive! It's ALIVE!", class: "message"
 
     initialize: (serializeState) ->
-        atom.workspaceView.command "git-history:show-file-history", => @toggle()
+        # atom.workspaceView.command "git-history:show-file-history", => @toggle()
 
     # Returns an object that can be retrieved when package is activated
     serialize: ->

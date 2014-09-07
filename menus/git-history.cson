@@ -5,7 +5,7 @@
     'submenu': [
       'label': 'git-history'
       'submenu': [
-        { 'label': 'Toggle', 'command': 'git-history:toggle' }
+        { 'label': 'Show File History', 'command': 'git-history:show-file-history' }
       ]
     ]
   }

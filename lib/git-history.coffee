@@ -6,9 +6,10 @@ module.exports =
         gitPath: "/usr/bin/git"
 
     activate: (state) ->
-        atom.workspaceView.command "git-history:show-file-history", => @toggle()
+        atom.workspaceView.command "git-history:show-file-history", => @showFileHistory()
 
-    toggle: ->
+    showFileHistory: ->
+
         stdout = (output) ->
             output = "[#{output.substring(0, output.length - 1)}]" if output
             console.log(output)
@@ -20,7 +21,7 @@ module.exports =
         jsonFormat = "{\"commit\": \"%h\",\"author\": \"%an <%ae>\",\"date\": \"%ad\",\"message\": \"%s\"},"
 
         new BufferedProcess {
-          command: "/usr/bin/git",
+          command: "git", #atom.config.get("git-history.gitPath"),
           args: ["-C", path.dirname(inputFile), "log", "--show-notes", "--no-decorate", "--follow", "--pretty=format:#{jsonFormat}", inputFile],
           stdout,
           exit

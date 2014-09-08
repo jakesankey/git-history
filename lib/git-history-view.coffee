@@ -21,19 +21,24 @@ class GitHistoryView extends SelectListView
            </li>"""
 
     confirmed: (logItem) ->
+        fileContents = ""
         stdout = (output) =>
-            outputDir = "#{atom.getConfigDirPath()}/.git-history"
-            fs.mkdir outputDir if not fs.existsSync outputDir
-            outputFilePath = "#{outputDir}/#{logItem.hash}-#{path.basename(@file)}"
-            fs.writeFile outputFilePath, output, (error) ->
-                if not error
-                    activePane = atom.workspace.getActivePane()
-                    atom.workspace.open(outputFilePath, {split: 'right', activatePane: no}).done (newEditor) ->
-                        activePane.activate()
+            fileContents += output
 
-        @_loadRevision logItem, stdout
+        exit = (code) =>
+            if code is 0
+                outputDir = "#{atom.getConfigDirPath()}/.git-history"
+                fs.mkdir outputDir if not fs.existsSync outputDir
+                outputFilePath = "#{outputDir}/#{logItem.hash}-#{path.basename(@file)}"
+                fs.writeFile outputFilePath, fileContents, (error) ->
+                    if not error
+                        activePane = atom.workspace.getActivePane()
+                        atom.workspace.open(outputFilePath, {split: 'right', activatePane: no}).done (newEditor) ->
+                            activePane.activate()
 
-    _loadRevision: (logItem, stdout) ->
+        @_loadRevision logItem, stdout, exit
+
+    _loadRevision: (logItem, stdout, exit) ->
         new BufferedProcess {
             command: "git",
             args: [
@@ -42,7 +47,8 @@ class GitHistoryView extends SelectListView
                 "show",
                 "#{logItem.hash}:#{atom.project.getRepo().relativize(@file)}"
             ],
-            stdout
+            stdout,
+            exit
         }
 
 

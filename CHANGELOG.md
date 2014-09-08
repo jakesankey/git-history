@@ -1,3 +1,8 @@
+## 1.0.0 - Initial Major Release
+* Refactored
+* Now showing proper error messages when history can't be found
+* Loading indictor
+
 ## 0.3.1 - Third Release (update 1)
 * Updated layout for log view. Now showing author's name
 

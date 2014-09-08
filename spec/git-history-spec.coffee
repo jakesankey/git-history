@@ -1,30 +1,37 @@
-{WorkspaceView} = require 'atom'
-GitHistory = require '../lib/git-history'
+gitHistory = require '../lib/git-history'
 
-# Use the command `window:run-package-specs` (cmd-alt-ctrl-p) to run specs.
-#
-# To run a specific `it` or `describe` block add an `f` to the front (e.g. `fit`
-# or `fdescribe`). Remove the `f` to unfocus the block.
-
-describe "GitHistory", ->
-    activationPromise = null
+describe "Git History Test Suite", ->
+    TEST_PATH = "/path/file.coffee"
+    TEST_RESPONSE = "{\"hash\": \"12345\", \"author\": \"John Doe\", \"relativeDate\": \"2 Hours ago\", \"fullDate\": \"2014-09-08\", \"message\": \"Foo Bar\"}"
 
     beforeEach ->
-        atom.workspaceView = new WorkspaceView
-        activationPromise = atom.packages.activatePackage('git-history')
+        gitHistory._getMaxNumberOfCommits = -> 100
+        gitHistory._getCurrentFile = -> TEST_PATH
+        gitHistory._fetchFileHistory = (file, stdout, exit) ->
+            stdout TEST_RESPONSE
+            exit 0
 
-    describe "when the git-history:show-file-history event is triggered", ->
-        it "attaches and then detaches the view", ->
-            expect(atom.workspaceView.find('.git-history')).not.toExist()
+    it "should load git history view upon success", ->
+        logItems = null
+        inputFile = null
+        gitHistory._loadGitHistoryView = (items, file) ->
+            logItems = items
+            inputFile = file
 
-            # This is an activation event, triggering it will cause the package to be
-            # activated.
-            atom.workspaceView.trigger 'git-history:show-file-history'
+        gitHistory._showFileHistory()
+        expect(logItems.length).toEqual(1)
+        expect(inputFile).toEqual(TEST_PATH)
 
-            waitsForPromise ->
-                activationPromise
+    it "should not load git history view upon failure", ->
+        logItems = null
+        inputFile = null
+        gitHistory._fetchFileHistory = (file, stdout, exit) ->
+            stdout ""
+            exit 128
+        gitHistory._loadGitHistoryView = (items, file) ->
+            logItems = items
+            inputFile = file
 
-            runs ->
-                expect(atom.workspaceView.find('.git-history')).toExist()
-                atom.workspaceView.trigger 'git-history:show-file-history'
-                expect(atom.workspaceView.find('.git-history')).not.toExist()
+        gitHistory._showFileHistory()
+        expect(logItems).toEqual(null)
+        expect(inputFile).toEqual(null)

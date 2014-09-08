@@ -1,5 +1,5 @@
-# Git History package
+# Git History Package for Atom
 
 View previous versions of any file known to git.
 
-![A screenshot of your spankin' package](https://f.cloud.github.com/assets/69169/2290250/c35d867a-a017-11e3-86be-cd7c5bf3ff9b.gif)
+![](https://raw.githubusercontent.com/jakesankey/git-history/master/resources/screenshot.gif)

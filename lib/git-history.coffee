@@ -11,7 +11,6 @@ class GitHistory
 
     _showFileHistory: ->
         inputFile = @_getCurrentFile()
-
         log = []
 
         stdout = (output) ->
@@ -49,7 +48,8 @@ class GitHistory
     _getMaxNumberOfCommits: ->
         return atom.config.get("git-history.maxCommits")
 
-    _getCurrentFile: -> atom.workspace.getActiveEditor().getPath()
+    _getCurrentFile: ->
+        atom.workspace.getActiveEditor()?.getPath()
 
     _loadGitHistoryView: (logItems, file) ->
         new GitHistoryView(logItems, file)

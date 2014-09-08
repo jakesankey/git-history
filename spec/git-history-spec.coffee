@@ -19,8 +19,8 @@ describe "Git History Test Suite", ->
             inputFile = file
 
         gitHistory._showFileHistory()
-        expect(logItems.length).toEqual(1)
-        expect(inputFile).toEqual(TEST_PATH)
+        expect(logItems.length).toBe 1
+        expect(inputFile).toBe TEST_PATH
 
     it "should not load git history view upon failure", ->
         logItems = null
@@ -33,5 +33,18 @@ describe "Git History Test Suite", ->
             inputFile = file
 
         gitHistory._showFileHistory()
-        expect(logItems).toEqual(null)
-        expect(inputFile).toEqual(null)
+        expect(logItems).toBe null
+        expect(inputFile).toBe null
+
+    it "should parse comma delimited objects in string to separate items", ->
+        logItems = null
+        inputFile = null
+        gitHistory._fetchFileHistory = (file, stdout, exit) ->
+            stdout TEST_RESPONSE + "," + TEST_RESPONSE
+            exit 0
+        gitHistory._loadGitHistoryView = (items, file) ->
+            logItems = items
+            inputFile = file
+
+        gitHistory._showFileHistory()
+        expect(logItems.length).toBe 2

@@ -6,7 +6,7 @@ class GitHistoryView extends SelectListView
 
     initialize: (@data, @file) ->
         super
-        @setItems(data)
+        @setItems data
         @addClass "overlay from-top"
         atom.workspaceView.append this
         @focusFilterEditor()
@@ -31,6 +31,9 @@ class GitHistoryView extends SelectListView
                     atom.workspace.open(outputFilePath, {split: 'right', activatePane: no}).done (newEditor) ->
                         activePane.activate()
 
+        @_loadRevision logItem, stdout
+
+    _loadRevision: (logItem, stdout) ->
         new BufferedProcess {
             command: "git",
             args: [
@@ -41,5 +44,6 @@ class GitHistoryView extends SelectListView
             ],
             stdout
         }
+
 
 module.exports = GitHistoryView

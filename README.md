@@ -2,4 +2,6 @@
 
 View previous versions of any file known to git.
 
+`apm install git-history`
+
 ![](https://raw.githubusercontent.com/jakesankey/git-history/master/resources/screenshot.gif)

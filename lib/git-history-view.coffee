@@ -1,72 +1,46 @@
-{SelectListView, BufferedProcess} = require 'atom'
+path = require "path"
+fs = require "fs"
+{SelectListView, BufferedProcess} = require "atom"
 
 class GitHistoryView extends SelectListView
-    # @content: ->
-    #     @div class: 'git-history overlay from-top', =>
-    #         @div "The GitHistory package is Alive! It's ALIVE!", class: "message"
 
-    initialize: (@data) ->
+    initialize: (@data, @file) ->
         super
+        @setItems(data)
+        @addClass "overlay from-top"
         atom.workspaceView.append this
+        @focusFilterEditor()
         # atom.workspaceView.command "git-history:show-file-history", => @toggle()
 
-    # Returns an object that can be retrieved when package is activated
-    serialize: ->
+    getFilterKey: -> "message"
 
-    # Tear down any state and detach
-    destroy: ->
-        @detach()
+    viewForItem: (logItem) ->
+        """<li>
+            <div class='text-highlight text-huge'>#{logItem.message}</div>
+            <div>#{path.basename(@file)} - #{logItem.relativeDate}</div>
+            <div class='text-info'>#{logItem.hash} committed on #{logItem.fullDate}</div>
+           </li>"""
 
-    toggle: ->
-        console.log "GitHistoryView was toggled!"
-        if @hasParent()
-            @detach()
-        else
-            atom.workspaceView.append(this)
+    confirmed: (logItem) ->
+        stdout = (output) =>
+            outputDir = "#{atom.getConfigDirPath()}/.git-history"
+            fs.mkdir outputDir if not fs.existsSync outputDir
+            outputFilePath = "#{outputDir}/#{logItem.hash}-#{path.basename(@file)}"
+            fs.writeFile outputFilePath, output, (error) ->
+                if not error
+                    activePane = atom.workspace.getActivePane()
+                    atom.workspace.open(outputFilePath, {split: 'right', activatePane: no}).done (newEditor) ->
+                        activePane.activate()
+
+        new BufferedProcess {
+            command: "git",
+            args: [
+                "-C",
+                path.dirname(@file),
+                "show",
+                "#{logItem.hash}:#{atom.project.getRepo().relativize(@file)}"
+            ],
+            stdout
+        }
 
 module.exports = GitHistoryView
-
-
-# Os = require 'os'
-# Path = require 'path'
-# fs = require 'fs-plus'
-#
-# {$$, BufferedProcess, SelectListView} = require 'atom'
-#
-# GitShow = require '../models/git-show'
-#
-# module.exports =
-# class LogListView extends SelectListView
-#
-#   currentFile = ->
-#     atom.project.relativize atom.workspace.getActiveEditor()?.getPath()
-#
-#   showCommitFilePath = ->
-#     Path.join Os.tmpDir(), "atom_git_plus_commit.diff"
-#
-#   initialize: (@data, @onlyCurrentFile) ->
-#     super
-#     @addClass 'overlay from-top'
-#     @parseData()
-#
-#   parseData: ->
-#     @data = @data.split("\n")[...-1]
-#     @setItems(
-#       for item in @data when item != ''
-#         tmp = item.match /([\w\d]{7});\|(.*);\|(.*);\|(.*)/
-#         {hash: tmp?[1], author: tmp?[2], title: tmp?[3], time: tmp?[4]}
-#     )
-#     atom.workspaceView.append this
-#     @focusFilterEditor()
-#
-#   getFilterKey: -> 'title'
-#
-#   viewForItem: (commit) ->
-#     $$ ->
-#       @li =>
-#         @div class: 'text-highlight text-huge', commit.title
-#         @div class: '', "#{commit.hash} by #{commit.author}"
-#         @div class: 'text-info', commit.time
-#
-#   confirmed: ({hash}) ->
-#     GitShow(hash, currentFile() if @onlyCurrentFile)

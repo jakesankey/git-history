@@ -8,5 +8,5 @@
 # For more detailed documentation see
 # https://atom.io/docs/latest/advanced/keymaps
 
-'.workspace':
+'.workspace .editor':
   'ctrl-alt-o': 'git-history:show-file-history'

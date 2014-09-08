@@ -3,15 +3,18 @@ path = require "path"
 GitHistoryView = require "./git-history-view"
 
 module.exports =
-    # configDefaults:
-    #     gitPath: "/usr/bin/git"
+
+    configDefaults:
+        maxCommits: 100
 
     activate: (state) ->
         atom.workspaceView.command "git-history:show-file-history", => @showFileHistory()
 
     showFileHistory: ->
+        inputFile = atom.workspace.getActiveEditor().getPath()
 
         log = []
+
         stdout = (output) ->
             output = output.replace("\n", "").trim()
             if output?.substring(output.length - 1) is ","
@@ -20,17 +23,23 @@ module.exports =
             log.push item for item in JSON.parse "[#{output}]"
 
         exit = (code) ->
-            if code is 0
-                new GitHistoryView(log)
-            # console.log(log)
+            new GitHistoryView(log, inputFile) if code is 0
 
-        inputFile = atom.workspace.getActiveEditor().getPath()
-
-        format = "{\"commit\": \"%h\",\"author\": \"%an <%ae>\",\"date\": \"%ad\",\"message\": \"%s\"},"
+        format = "{\"hash\": \"%h\",\"author\": \"%an <%ae>\",\"relativeDate\": \"%cr\",\"fullDate\": \"%ad\",\"message\": \"%s\"},"
 
         new BufferedProcess {
-          command: "git", #atom.config.get("git-history.gitPath"),
-          args: ["-C", path.dirname(inputFile), "log", "--follow", "--pretty=format:#{format}", "--topo-order", '--date=short', inputFile],
-          stdout,
-          exit
+            command: "git",
+            args: [
+                "-C",
+                path.dirname(inputFile),
+                "log",
+                "--max-count=#{atom.config.get("git-history.maxCommits")}",
+                "--follow",
+                "--pretty=format:#{format}",
+                "--topo-order",
+                "--date=short",
+                inputFile
+            ],
+            stdout,
+            exit
         }

@@ -1,3 +1,7 @@
+## 0.3.0 - Third Release
+* Added option to choose if history view should become active
+   -  Defaults to `true`
+
 ## 0.2.0 - Second Release
 * Fixed issue with multiple tabs being opened
 * Fixed issue with partial historical files being shown

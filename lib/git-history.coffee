@@ -4,7 +4,8 @@ GitHistoryView = require "./git-history-view"
 
 class GitHistory
     configDefaults:
-        maxCommits: 100
+        maxCommits: 100,
+        cursorShouldBeInHistoryPane: yes
 
     activate: (state) ->
         atom.workspaceView.command "git-history:show-file-history", => @_showFileHistory()

@@ -26,15 +26,17 @@ class GitHistoryView extends SelectListView
             fileContents += output
 
         exit = (code) =>
+            activateHistoryPane = atom.config.get("git-history.cursorShouldBeInHistoryPane")
             if code is 0
                 outputDir = "#{atom.getConfigDirPath()}/.git-history"
                 fs.mkdir outputDir if not fs.existsSync outputDir
                 outputFilePath = "#{outputDir}/#{logItem.hash}-#{path.basename(@file)}"
                 fs.writeFile outputFilePath, fileContents, (error) ->
                     if not error
-                        activePane = atom.workspace.getActivePane()
-                        atom.workspace.open(outputFilePath, {split: 'right', activatePane: no}).done (newEditor) ->
-                            activePane.activate()
+                        originalPane = atom.workspace.getActivePane()
+                        options = {split: "right", activatePane: activateHistoryPane}
+                        atom.workspace.open(outputFilePath, options).done ->
+                            originalPane.activate() if not activateHistoryPane
 
         @_loadRevision logItem, stdout, exit
 

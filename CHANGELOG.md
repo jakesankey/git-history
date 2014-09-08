@@ -1,3 +1,6 @@
+## 0.3.1 - Third Release (update 1)
+* Updated layout for log view. Now showing author's name
+
 ## 0.3.0 - Third Release
 * Added option to choose if history view should become active
    -  Defaults to `true`

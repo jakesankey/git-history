@@ -27,7 +27,7 @@ class GitHistory
         @_fetchFileHistory(inputFile, stdout, exit)
 
     _fetchFileHistory: (file, stdout, exit) ->
-        format = "{\"hash\": \"%h\",\"author\": \"%an <%ae>\",\"relativeDate\": \"%cr\",\"fullDate\": \"%ad\",\"message\": \"%s\"},"
+        format = "{\"hash\": \"%h\",\"author\": \"%an\",\"relativeDate\": \"%cr\",\"fullDate\": \"%ad\",\"message\": \"%s\"},"
 
         new BufferedProcess {
             command: "git",

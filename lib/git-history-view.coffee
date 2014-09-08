@@ -16,8 +16,8 @@ class GitHistoryView extends SelectListView
     viewForItem: (logItem) ->
         """<li>
             <div class='text-highlight text-huge'>#{logItem.message}</div>
-            <div>#{path.basename(@file)} - #{logItem.relativeDate}</div>
-            <div class='text-info'>#{logItem.hash} committed on #{logItem.fullDate}</div>
+            <div>#{logItem.author} - #{logItem.relativeDate} (#{logItem.fullDate})</div>
+            <div class='text-info'>#{logItem.hash} - #{path.basename(@file)}</div>
            </li>"""
 
     confirmed: (logItem) ->

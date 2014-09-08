@@ -13,18 +13,18 @@ describe "GitHistory", ->
         atom.workspaceView = new WorkspaceView
         activationPromise = atom.packages.activatePackage('git-history')
 
-    describe "when the git-history:toggle event is triggered", ->
+    describe "when the git-history:show-file-history event is triggered", ->
         it "attaches and then detaches the view", ->
             expect(atom.workspaceView.find('.git-history')).not.toExist()
 
             # This is an activation event, triggering it will cause the package to be
             # activated.
-            atom.workspaceView.trigger 'git-history:toggle'
+            atom.workspaceView.trigger 'git-history:show-file-history'
 
             waitsForPromise ->
                 activationPromise
 
             runs ->
                 expect(atom.workspaceView.find('.git-history')).toExist()
-                atom.workspaceView.trigger 'git-history:toggle'
+                atom.workspaceView.trigger 'git-history:show-file-history'
                 expect(atom.workspaceView.find('.git-history')).not.toExist()

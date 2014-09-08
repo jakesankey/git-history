@@ -10,7 +10,6 @@ class GitHistoryView extends SelectListView
         @addClass "overlay from-top"
         atom.workspaceView.append this
         @focusFilterEditor()
-        # atom.workspaceView.command "git-history:show-file-history", => @toggle()
 
     getFilterKey: -> "message"
 

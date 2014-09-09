@@ -44,7 +44,6 @@ class GitHistoryView extends SelectListView
                 path.dirname(@file),
                 "log",
                 "--max-count=#{@_getMaxNumberOfCommits()}",
-                "--follow",
                 "--pretty=format:#{format}",
                 "--topo-order",
                 "--date=short",
@@ -85,7 +84,7 @@ class GitHistoryView extends SelectListView
                         atom.workspace.open(outputFilePath, options).done ->
                             originalPane.activate() if not activateHistoryPane
             else
-                @setError "Could not retrieve history for #{path.basename(file)}"
+                @setError "Could not retrieve history for #{path.basename(@file)}"
 
         @_loadRevision logItem.hash, stdout, exit
 

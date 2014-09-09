@@ -1,6 +1,6 @@
 path = require "path"
 fs = require "fs"
-{SelectListView, BufferedProcess} = require "atom"
+{SelectListView, BufferedProcess, $$} = require "atom"
 
 class GitHistoryView extends SelectListView
 
@@ -60,11 +60,12 @@ class GitHistoryView extends SelectListView
     getFilterKey: -> "message"
 
     viewForItem: (logItem) ->
-        """<li>
-            <div class='text-highlight text-huge'>#{logItem.message}</div>
-            <div>#{logItem.author} - #{logItem.relativeDate} (#{logItem.fullDate})</div>
-            <div class='text-info'>#{logItem.hash} - #{path.basename(@file)}</div>
-           </li>"""
+        fileName = path.basename(@file)
+        $$ ->
+            @li =>
+                @div class: "text-highlight text-huge", logItem.message
+                @div "#{logItem.author} - #{logItem.relativeDate} (#{logItem.fullDate})"
+                @div class: "text-info", "#{logItem.hash} - #{fileName}"
 
     confirmed: (logItem) ->
         fileContents = ""

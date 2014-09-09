@@ -1,3 +1,6 @@
+## 1.0.1 - Initial Major Release (update 1)
+* Refactored log menu view to use SpacePen
+
 ## 1.0.0 - Initial Major Release
 * Refactored
 * Now showing proper error messages when history can't be found

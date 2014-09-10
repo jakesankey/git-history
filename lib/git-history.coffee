@@ -3,6 +3,7 @@ GitHistoryView = require "./git-history-view"
 class GitHistory
 
     configDefaults:
+        "Show Diff with HEAD": no
         maxCommits: 100,
         cursorShouldBeInHistoryPane: yes
 

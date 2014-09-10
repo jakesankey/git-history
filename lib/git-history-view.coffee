@@ -74,9 +74,13 @@ class GitHistoryView extends SelectListView
         exit = (code) =>
             activateHistoryPane = atom.config.get("git-history.cursorShouldBeInHistoryPane")
             if code is 0
+                if fileContents.length is 0 and @items[0].hash is logItem.hash
+                    fileContents = atom.workspace.getActiveEditor().getText()
                 outputDir = "#{atom.getConfigDirPath()}/.git-history"
                 fs.mkdir outputDir if not fs.existsSync outputDir
                 outputFilePath = "#{outputDir}/#{logItem.hash}-#{path.basename(@file)}"
+                if atom.config.getSettings()["git-history"]["Show Diff with HEAD"]
+                    outputFilePath += ".diff"
                 fs.writeFile outputFilePath, fileContents, (error) ->
                     if not error
                         originalPane = atom.workspace.getActivePane()
@@ -89,17 +93,25 @@ class GitHistoryView extends SelectListView
         @_loadRevision logItem.hash, stdout, exit
 
     _loadRevision: (hash, stdout, exit) ->
+        diffArgs = [
+            "-C",
+            path.dirname(@file),
+            "diff",
+            "-U9999999",
+            "HEAD:#{atom.project.getRepo()?.relativize(@file)}",
+            "#{hash}:#{atom.project.getRepo()?.relativize(@file)}"
+        ]
+        showArgs = [
+            "-C",
+            path.dirname(@file),
+            "show",
+            "#{hash}:#{atom.project.getRepo()?.relativize(@file)}"
+        ]
         new BufferedProcess {
             command: "git",
-            args: [
-                "-C",
-                path.dirname(@file),
-                "show",
-                "#{hash}:#{atom.project.getRepo().relativize(@file)}"
-            ],
+            args: if atom.config.getSettings()["git-history"]["Show Diff with HEAD"] then diffArgs else showArgs,
             stdout,
             exit
         }
-
 
 module.exports = GitHistoryView

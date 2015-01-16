@@ -21,8 +21,11 @@ class GitHistoryView extends SelectListView
         stdout = (output) ->
             output = output.replace("\n", "").trim()
 
-            output = output.replace(/"/g, "\\\"")
-            output = output.replace(/''''/g, "\"")
+            matches = output.match(/\"message\": \"(.*?)\"},/g)
+            for match in matches
+              message = match.match(/\"message\": \"(.*)\"},/)[1]
+              m = match.replace(message, message.replace(/"/g, '\\\"'))
+              output = output.replace(match, m)
 
             if output?.substring(output.length - 1) is ","
                 output = output.substring(0, output.length - 1)
@@ -39,7 +42,7 @@ class GitHistoryView extends SelectListView
         @_fetchFileHistory(stdout, exit)
 
     _fetchFileHistory: (stdout, exit) ->
-        format = "{''''hash'''': ''''%h'''',''''author'''': ''''%an'''',''''relativeDate'''': ''''%cr'''',''''fullDate'''': ''''%ad'''',''''message'''': ''''%s''''},"
+        format = "{\"hash\": \"%h\",\"author\": \"%an\",\"relativeDate\": \"%cr\",\"fullDate\": \"%ad\",\"message\": \"%s\"},"
 
         new BufferedProcess {
             command: "git",

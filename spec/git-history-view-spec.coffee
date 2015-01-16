@@ -2,7 +2,7 @@
 GitHistoryView = require '../lib/git-history-view'
 
 describe "Git History View Test Suite", ->
-    TEST_RESPONSE = "{\"hash\": \"12345\", \"author\": \"John Doe\", \"relativeDate\": \"2 Hours ago\", \"fullDate\": \"2014-09-08\", \"message\": \"Foo Bar\"}"
+    TEST_RESPONSE = "{\"hash\": \"12345\", \"author\": \"John Doe\", \"relativeDate\": \"2 Hours ago\", \"fullDate\": \"2014-09-08\", \"message\": \"Foo Bar with \"quotes\"\"}"
 
     beforeEach ->
         atom.workspaceView = new WorkspaceView()

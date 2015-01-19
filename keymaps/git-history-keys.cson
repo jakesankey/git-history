@@ -8,6 +8,6 @@
 # For more detailed documentation see
 # https://atom.io/docs/latest/advanced/keymaps
 
-'.workspace .editor':
+'atom-workspace atom-text-editor':
   'ctrl-alt-o': 'git-history:show-file-history'
   'ctrl-alt-h': 'git-history:show-file-history'

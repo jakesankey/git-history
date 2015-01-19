@@ -22,10 +22,11 @@ class GitHistoryView extends SelectListView
             output = output.replace("\n", "").trim()
 
             matches = output.match(/\"message\": \"(.*?)\"},/g)
-            for match in matches
-              message = match.match(/\"message\": \"(.*)\"},/)[1]
-              m = match.replace(message, message.replace(/"/g, '\\\"'))
-              output = output.replace(match, m)
+            if matches?
+              for match in matches
+                message = match.match(/\"message\": \"(.*)\"},/)[1]
+                m = match.replace(message, message.replace(/"/g, '\\\"'))
+                output = output.replace(match, m)
 
             if output?.substring(output.length - 1) is ","
                 output = output.substring(0, output.length - 1)
@@ -37,7 +38,6 @@ class GitHistoryView extends SelectListView
                 @setItems logItems
             else
                 @setError "No history found for #{path.basename(@file)}"
-
 
         @_fetchFileHistory(stdout, exit)
 

@@ -43,7 +43,7 @@ describe "Git History View Test Suite", ->
         view = new GitHistoryView()
         logItems = null
         view._fetchFileHistory = (stdout, exit) ->
-            stdout TEST_RESPONSE + "," + TEST_RESPONSE
+            stdout TEST_RESPONSE + TEST_RESPONSE
             exit 0
         view.setItems = (items) ->
             logItems = items

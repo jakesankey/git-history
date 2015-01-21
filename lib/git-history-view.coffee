@@ -35,7 +35,7 @@ class GitHistoryView extends SelectListView
         @_fetchFileHistory(stdout, exit)
 
     _fetchFileHistory: (stdout, exit) ->
-        format = "{\"hash\": \"%h\",\"author\": \"%an\",\"relativeDate\": \"%cr\",\"fullDate\": \"%ad\",\"message\": \"%s\"},"
+        format = "{\"hash\": \"%h\",\"author\": \"%an\",\"relativeDate\": \"%cr\",\"fullDate\": \"%ad\",\"message\": \"%f\"},"
 
         new BufferedProcess {
             command: "git",

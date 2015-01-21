@@ -1,6 +1,7 @@
 path = require "path"
 fs = require "fs"
-{SelectListView, BufferedProcess, $$} = require "atom"
+{$$} = require "atom-space-pen-views"
+{SelectListView, BufferedProcess} = require "atom"
 
 class GitHistoryView extends SelectListView
 
@@ -87,6 +88,7 @@ class GitHistoryView extends SelectListView
                 @setError "Could not retrieve history for #{path.basename(@file)}"
 
         @_loadRevision logItem.hash, stdout, exit
+        @cancel()
 
     _loadRevision: (hash, stdout, exit) ->
         new BufferedProcess {
@@ -100,6 +102,5 @@ class GitHistoryView extends SelectListView
             stdout,
             exit
         }
-
 
 module.exports = GitHistoryView

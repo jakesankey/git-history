@@ -1,11 +1,11 @@
-{WorkspaceView} = require "atom"
+# {WorkspaceView} = require "atom"
 GitHistoryView = require '../lib/git-history-view'
 
 describe "Git History View Test Suite", ->
     TEST_RESPONSE = "{\"hash\": \"12345\", \"author\": \"John Doe\", \"relativeDate\": \"2 Hours ago\", \"fullDate\": \"2014-09-08\", \"message\": \"Foo Bar\"}"
 
     beforeEach ->
-        atom.workspaceView = new WorkspaceView()
+        # atom.workspaceView = new WorkspaceView()
 
     it "should use 'message' as the filter key", ->
         view = new GitHistoryView()

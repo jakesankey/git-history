@@ -7,10 +7,10 @@ class GitHistory
         cursorShouldBeInHistoryPane: yes
 
     activate: ->
-        atom.workspaceView.command "git-history:show-file-history", => @_loadGitHistoryView()
+        atom.commands.add "atom-text-editor",
+            "git-history:show-file-history": @_loadGitHistoryView
 
     _loadGitHistoryView: ->
         new GitHistoryView(atom.workspace.getActiveEditor()?.getPath())
-
 
 module.exports = new GitHistory()

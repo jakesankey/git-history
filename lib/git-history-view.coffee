@@ -57,6 +57,9 @@ class GitHistoryView extends SelectListView
     _getMaxNumberOfCommits: ->
         return atom.config.get("git-history.maxCommits")
 
+    _isDiffEnabled: ->
+        return atom.config.get("git-history.diffWithHead")
+
     getFilterKey: -> "message"
 
     viewForItem: (logItem) ->
@@ -73,32 +76,38 @@ class GitHistoryView extends SelectListView
             fileContents += output
 
         exit = (code) =>
-            activateHistoryPane = atom.config.get("git-history.cursorShouldBeInHistoryPane")
             if code is 0
                 outputDir = "#{atom.getConfigDirPath()}/.git-history"
                 fs.mkdir outputDir if not fs.existsSync outputDir
                 outputFilePath = "#{outputDir}/#{logItem.hash}-#{path.basename(@file)}"
                 fs.writeFile outputFilePath, fileContents, (error) ->
                     if not error
-                        originalPane = atom.workspace.getActivePane()
-                        options = {split: "right", activatePane: activateHistoryPane}
-                        atom.workspace.open(outputFilePath, options).done ->
-                            originalPane.activate() if not activateHistoryPane
+                        options = {split: "right", activatePane: yes}
+                        atom.workspace.open(outputFilePath, options)
             else
                 @setError "Could not retrieve history for #{path.basename(@file)}"
 
         @_loadRevision logItem.hash, stdout, exit
-        @cancel()
 
     _loadRevision: (hash, stdout, exit) ->
+        showDiff = @_isDiffEnabled()
+        diffArgs = [
+            "-C",
+            path.dirname(@file),
+            "diff",
+            "-U9999999",
+            "HEAD:#{atom.project.getRepo()?.relativize(@file)}",
+            "#{hash}:#{atom.project.getRepo()?.relativize(@file)}"
+        ]
+        showArgs = [
+            "-C",
+            path.dirname(@file),
+            "show",
+            "#{hash}:#{atom.project.getRepo().relativize(@file)}"
+        ]
         new BufferedProcess {
             command: "git",
-            args: [
-                "-C",
-                path.dirname(@file),
-                "show",
-                "#{hash}:#{atom.project.getRepo().relativize(@file)}"
-            ],
+            args: if showDiff then diffArgs else showArgs,
             stdout,
             exit
         }

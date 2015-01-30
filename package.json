@@ -6,6 +6,9 @@
   "activationEvents": [
     "git-history:show-file-history"
   ],
+  "scripts": {
+    "test": "apm test"
+  },
   "repository": "https://github.com/jakesankey/git-history",
   "license": "MIT",
   "engines": {

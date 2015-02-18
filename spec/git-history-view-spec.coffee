@@ -37,6 +37,22 @@ describe "Git History View Test Suite", ->
         expect(passedItem).toEqual logItem.hash
         expect(callbackCalled).toBe yes
 
+    it "should load selected revision with diff", ->
+        logItem = {hash: 12345}
+        view = new GitHistoryView()
+        view._isDiffEnabled = ->
+            return yes
+
+        passedItem = null
+        callbackCalled = no
+        view._loadRevision = (item) ->
+            passedItem = item
+            callbackCalled = yes
+
+        view.confirmed(logItem)
+        expect(passedItem).toEqual logItem.hash
+        expect(callbackCalled).toBe yes
+
     it "should not load git history view upon failure", ->
         view = new GitHistoryView()
         error = no

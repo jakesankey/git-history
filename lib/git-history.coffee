@@ -11,7 +11,6 @@ class GitHistory
             default: 100
 
     activate: ->
-        console.log @config
         atom.commands.add "atom-text-editor",
             "git-history:show-file-history": @_loadGitHistoryView
 

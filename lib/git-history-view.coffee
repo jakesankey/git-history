@@ -1,20 +1,25 @@
 path = require "path"
 fs = require "fs"
-{$$} = require "atom-space-pen-views"
-{SelectListView, BufferedProcess} = require "atom"
+{$$, SelectListView} = require "atom-space-pen-views"
+{BufferedProcess} = require "atom"
 
 class GitHistoryView extends SelectListView
 
     initialize: (@file) ->
-        super
-        @_setup() if file
+        super()
+        @show() if file
 
-    _setup: ->
+    show: ->
         @setLoading "Loading history for #{path.basename(@file)}"
-        @addClass "overlay from-top"
-        atom.workspaceView.append this
-        @focusFilterEditor()
+        @panel ?= atom.workspace.addModalPanel(item: this)
+        @panel.show()
+        @storeFocusedElement()
         @_loadLogData()
+        @focusFilterEditor()
+
+    cancel: ->
+        super()
+        @panel?.hide()
 
     _loadLogData: ->
         logItems = []

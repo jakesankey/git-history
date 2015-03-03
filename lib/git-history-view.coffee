@@ -41,7 +41,7 @@ class GitHistoryView extends SelectListView
         @_fetchFileHistory(stdout, exit)
 
     _fetchFileHistory: (stdout, exit) ->
-        format = "{\"hash\": \"%h\",\"author\": \"%an\",\"relativeDate\": \"%cr\",\"fullDate\": \"%ad\",\"message\": \"%f\"},"
+        format = "{\"hash\": \"%h\",\"author\": \"%an\",\"relativeDate\": \"%cr\",\"fullDate\": \"%ad\",\"message\": \"%s\"},"
 
         new BufferedProcess {
             command: "git",
@@ -52,7 +52,7 @@ class GitHistoryView extends SelectListView
                 "--max-count=#{@_getMaxNumberOfCommits()}",
                 "--pretty=format:#{format}",
                 "--topo-order",
-                "--date=short",
+                "--date=local",
                 @file
             ],
             stdout,
@@ -70,10 +70,12 @@ class GitHistoryView extends SelectListView
     viewForItem: (logItem) ->
         fileName = path.basename(@file)
         $$ ->
-            @li =>
-                @div class: "text-highlight text-huge", logItem.message
-                @div "#{logItem.author} - #{logItem.relativeDate} (#{logItem.fullDate})"
-                @div class: "text-info", "#{logItem.hash} - #{fileName}"
+            @li class: "two-lines", =>
+                @div class: "pull-right", =>
+                  @span class: "secondary-line", "#{logItem.hash}"
+                @span class: "primary-line", logItem.message
+                @div class: "secondary-line", "#{logItem.author} authored #{logItem.relativeDate}"
+                @div class: "secondary-line", "#{logItem.fullDate}"
 
     confirmed: (logItem) ->
         fileContents = ""

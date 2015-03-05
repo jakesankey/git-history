@@ -25,7 +25,15 @@ class GitHistoryView extends SelectListView
         logItems = []
 
         stdout = (output) ->
-            output = output.replace("\n", "").trim()
+            output = output.replace('\n', '')
+            matches = output.match(/{"author": ".*?","relativeDate": ".*?","fullDate": ".*?","message": "(.*?)","hash": "[a-f0-9]*?"},/g)
+            output = ''
+            if matches?
+              for match in matches
+                message = match.match(/{"author": ".*?","relativeDate": ".*?","fullDate": ".*?","message": "(.*)","hash": "[a-f0-9]*?"},/)[1]
+                messageEscaped = message.replace(/\\/g, "\\\\").replace(/\"/g, "\\\"")
+                output += match.replace(message, messageEscaped)
+
             if output?.substring(output.length - 1) is ","
                 output = output.substring(0, output.length - 1)
 
@@ -41,7 +49,7 @@ class GitHistoryView extends SelectListView
         @_fetchFileHistory(stdout, exit)
 
     _fetchFileHistory: (stdout, exit) ->
-        format = "{\"hash\": \"%h\",\"author\": \"%an\",\"relativeDate\": \"%cr\",\"fullDate\": \"%ad\",\"message\": \"%f\"},"
+        format = "{\"author\": \"%an\",\"relativeDate\": \"%cr\",\"fullDate\": \"%ad\",\"message\": \"%s\",\"hash\": \"%h\"},"
 
         new BufferedProcess {
             command: "git",

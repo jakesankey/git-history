@@ -26,13 +26,19 @@ class GitHistoryView extends SelectListView
 
         stdout = (output) ->
             output = output.replace('\n', '')
-            matches = output.match(/{"author": ".*?","relativeDate": ".*?","fullDate": ".*?","message": "(.*?)","hash": "[a-f0-9]*?"},/g)
+            commits = output.match(/{"author": ".*?","relativeDate": ".*?","fullDate": ".*?","message": ".*?","hash": "[a-f0-9]*?"},/g)
             output = ''
-            if matches?
-              for match in matches
-                message = match.match(/{"author": ".*?","relativeDate": ".*?","fullDate": ".*?","message": "(.*)","hash": "[a-f0-9]*?"},/)[1]
+            if commits?
+              for commit in commits
+                freeTextMatches = commit.match(/{"author": "(.*?)","relativeDate": ".*?","fullDate": ".*?","message": "(.*)","hash": "[a-f0-9]*?"},/)
+
+                author = freeTextMatches[1]
+                authorEscaped = author.replace(/\\/g, "\\\\").replace(/\"/g, "\\\"")
+                commitAltered = commit.replace(author, authorEscaped)
+
+                message = freeTextMatches[2]
                 messageEscaped = message.replace(/\\/g, "\\\\").replace(/\"/g, "\\\"")
-                output += match.replace(message, messageEscaped)
+                output += commitAltered.replace(message, messageEscaped)
 
             if output?.substring(output.length - 1) is ","
                 output = output.substring(0, output.length - 1)

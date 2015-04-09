@@ -15,6 +15,6 @@ class GitHistory
             "git-history:show-file-history": @_loadGitHistoryView
 
     _loadGitHistoryView: ->
-        new GitHistoryView(atom.workspace.getActiveEditor()?.getPath())
+        new GitHistoryView(atom.workspace.getActiveTextEditor()?.getPath())
 
 module.exports = new GitHistory()

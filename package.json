@@ -1,7 +1,7 @@
 {
   "name": "git-history",
   "main": "./lib/git-history",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "View previous versions of any file known to git.",
   "activationEvents": [
     "git-history:show-file-history"

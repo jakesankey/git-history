@@ -3,9 +3,11 @@
   "main": "./lib/git-history",
   "version": "2.5.0",
   "description": "View previous versions of any file known to git.",
-  "activationEvents": [
-    "git-history:show-file-history"
-  ],
+  "activationCommands": {
+    "atom-workspace": [
+      "git-history:show-file-history"
+    ]
+  },
   "scripts": {
     "test": "apm test"
   },

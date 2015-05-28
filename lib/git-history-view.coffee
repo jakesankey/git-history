@@ -77,7 +77,7 @@ class GitHistoryView extends SelectListView
         return atom.config.get("git-history.maxCommits")
 
     _isDiffEnabled: ->
-        return atom.config.get("git-history.diffWithHead")
+        return atom.config.get("git-history.showDiff")
 
     getFilterKey: -> "message"
 
@@ -101,6 +101,7 @@ class GitHistoryView extends SelectListView
                 outputDir = "#{atom.getConfigDirPath()}/.git-history"
                 fs.mkdir outputDir if not fs.existsSync outputDir
                 outputFilePath = "#{outputDir}/#{logItem.hash}-#{path.basename(@file)}"
+                outputFilePath += ".diff" if @_isDiffEnabled()
                 fs.writeFile outputFilePath, fileContents, (error) ->
                     if not error
                         options = {split: "right", activatePane: yes}
@@ -111,14 +112,15 @@ class GitHistoryView extends SelectListView
         @_loadRevision logItem.hash, stdout, exit
 
     _loadRevision: (hash, stdout, exit) ->
+        repo = r for r in atom.project.getRepositories() when @file.indexOf(r.repo.workingDirectory) != -1
         showDiff = @_isDiffEnabled()
         diffArgs = [
             "-C",
-            path.dirname(@file),
+            repo.repo.workingDirectory,
             "diff",
             "-U9999999",
-            "HEAD:#{atom.project.relativize(@file)}",
-            "#{hash}:#{atom.project.relativize(@file).replace(/\\/g, '/')}"
+            "#{hash}:#{atom.project.relativize(@file)}",
+            "#{atom.project.relativize(@file).replace(/\\/g, '/')}"
         ]
         showArgs = [
             "-C",

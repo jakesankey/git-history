@@ -3,9 +3,9 @@ GitHistoryView = require "./git-history-view"
 class GitHistory
 
     config:
-        diffWithHead:
+        showDiff:
             type: "boolean"
-            default: no
+            default: yes
         maxCommits:
             type: "integer"
             default: 100

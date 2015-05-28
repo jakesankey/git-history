@@ -116,7 +116,7 @@ class GitHistoryView extends SelectListView
         showDiff = @_isDiffEnabled()
         diffArgs = [
             "-C",
-            repo.repo.workingDirectory,
+            repo.repo.workingDirectory.replace(/\\/g, '/'),
             "diff",
             "-U9999999",
             "#{hash}:#{atom.project.relativize(@file)}",

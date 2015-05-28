@@ -118,13 +118,13 @@ class GitHistoryView extends SelectListView
             "diff",
             "-U9999999",
             "HEAD:#{atom.project.relativize(@file)}",
-            "#{hash}:#{atom.project.relativize(@file)}"
+            "#{hash}:#{atom.project.relativize(@file).replace(/\\/g, '/')}"
         ]
         showArgs = [
             "-C",
             path.dirname(@file),
             "show",
-            "#{hash}:#{atom.project.relativize(@file)}"
+            "#{hash}:#{atom.project.relativize(@file).replace(/\\/g, '/')}"
         ]
         new BufferedProcess {
             command: "git",

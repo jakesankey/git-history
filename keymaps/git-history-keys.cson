@@ -9,5 +9,4 @@
 # https://atom.io/docs/latest/advanced/keymaps
 
 'atom-workspace atom-text-editor':
-  'ctrl-alt-o': 'git-history:show-file-history'
   'ctrl-alt-h': 'git-history:show-file-history'

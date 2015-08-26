@@ -112,7 +112,7 @@ class GitHistoryView extends SelectListView
         @_loadRevision logItem.hash, stdout, exit
 
     _loadRevision: (hash, stdout, exit) ->
-        repo = r for r in atom.project.getRepositories() when @file.replace(/\\/g, '/').indexOf(r.repo.workingDirectory) != -1
+        repo = r for r in atom.project.getRepositories() when @file.replace(/\\/g, '/').indexOf(r?.repo.workingDirectory) != -1
         showDiff = @_isDiffEnabled()
         diffArgs = [
             "-C",

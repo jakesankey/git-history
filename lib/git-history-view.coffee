@@ -67,6 +67,7 @@ class GitHistoryView extends SelectListView
                 "--pretty=format:#{format}",
                 "--topo-order",
                 "--date=local",
+                "--follow"
                 @file
             ],
             stdout,

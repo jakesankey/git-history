@@ -19,7 +19,8 @@ class GitHistoryView extends SelectListView
 
     cancel: ->
         super()
-        @panel?.hide()
+        @panel?.destroy()
+        @panel = null
 
     _loadLogData: ->
         logItems = []

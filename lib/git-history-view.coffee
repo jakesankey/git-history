@@ -7,7 +7,7 @@ class GitHistoryView extends SelectListView
 
     initialize: (@file) ->
         super()
-        @show() if file
+        @show() if @file
 
     show: ->
         @setLoading "Loading history for #{path.basename(@file)}"

@@ -53,20 +53,6 @@ describe "Git History View Test Suite", ->
         expect(passedItem).toEqual logItem.hash
         expect(callbackCalled).toBe yes
 
-    it "should not load git history view upon failure", ->
-        view = new GitHistoryView()
-        error = no
-
-        view.setError = ->
-            error = yes
-
-        view._fetchFileHistory = (stdout, exit) ->
-            stdout ""
-            exit 128
-
-        view._loadLogData()
-        expect(error).toBe yes
-
     it "should parse comma delimited objects in string to separate items", ->
         view = new GitHistoryView()
         logItems = null

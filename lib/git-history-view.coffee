@@ -113,22 +113,27 @@ class GitHistoryView extends SelectListView
 
         @_loadRevision logItem.hash, stdout, exit
 
+    _relativizeToRoot: (filePath, repoRoot) ->
+      filePath.replace("#{repoRoot}#{path.sep}", '').replace(/\\/g, '/')
+
     _loadRevision: (hash, stdout, exit) ->
         repo = r for r in atom.project.getRepositories() when @file.replace(/\\/g, '/').indexOf(r?.repo.workingDirectory) != -1
         showDiff = @_isDiffEnabled()
+        repoRoot = repo.repo.workingDirectory
+        relativizedFile = @_relativizeToRoot(@file, repoRoot)
         diffArgs = [
             "-C",
-            repo.repo.workingDirectory,
+            repoRoot,
             "diff",
             "-U9999999",
-            "#{hash}:#{atom.project.relativize(@file).replace(/\\/g, '/')}",
-            "#{atom.project.relativize(@file).replace(/\\/g, '/')}"
+            "#{hash}:#{relativizedFile}",
+            "#{relativizedFile}"
         ]
         showArgs = [
             "-C",
-            path.dirname(@file),
+            repoRoot,
             "show",
-            "#{hash}:#{atom.project.relativize(@file).replace(/\\/g, '/')}"
+            "#{hash}:#{relativizedFile}"
         ]
         new BufferedProcess {
             command: "git",

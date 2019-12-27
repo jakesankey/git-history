@@ -101,7 +101,10 @@ class GitHistoryView extends SelectListView
         exit = (code) =>
             if code is 0
                 outputDir = "#{atom.getConfigDirPath()}/.git-history"
-                fs.mkdir outputDir if not fs.existsSync outputDir
+                if not fs.existsSync outputDir
+                    fs.mkdir outputDir, (error) ->
+                        if error
+                            @setError "Failed to create outputDir: #{outputDir}"
                 outputFilePath = "#{outputDir}/#{logItem.hash}-#{path.basename(@file)}"
                 outputFilePath += ".diff" if @_isDiffEnabled()
                 fs.writeFile outputFilePath, fileContents, (error) ->
